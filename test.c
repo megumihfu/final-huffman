@@ -1,4 +1,3 @@
-// C program to count occurrences in a linked list
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -110,6 +109,8 @@ void supp_occ(int array[], int val, int counter)
 }
 */
 
+Occurency *verif(char car, int counter);
+
 Occurency *reading_file()
 {   
     FILE *fp;   
@@ -123,6 +124,7 @@ Occurency *reading_file()
     occ->counter = 0;
 
     while((tmp = fgetc(fp)) != EOF){
+        //verif(tmp, occ->counter);
         occ->text[occ->counter] = tmp;
         //printf("%c", occ->text[i]); //test
         occ->counter++;
@@ -133,14 +135,66 @@ Occurency *reading_file()
     return occ;
 }
 
+Occurency *init()
+{
+    Occurency *occ = malloc(sizeof(*occ));
+
+    if(occ == NULL){
+        printf("Allocating memory failed\n");
+    }
+
+    for(int i = 0; i < occ->counter; i++){
+        occ->text[i] = 0;
+        occ->occ_text[i] = 0;
+    }
+
+    return occ;
+}
+
+Occurency *verif(char car, int counter)
+{
+    Occurency *occ;
+    int freq = 1;
+
+    printf("caractere pris : %c\n", car);
+    
+    for(int i = 0; i < counter; i++){
+        printf("verifying if the caracter already exist...\n");
+
+        if(car == occ->text[i]){
+            printf("%c is already in text array\n", car);
+            occ->occ_text[i] = occ->occ_text[i]++;
+            printf("we have incremented the frequency by one\n");
+        }
+
+        else{
+            printf("the caracter isn't in the array\n");
+            for(int j = 0; j < counter; j++){
+                printf("checking where we should stock the caracter...\n");
+                if(occ->text[j] == 0){
+                    occ->text[j] = car;
+                    occ->occ_text[j] = freq;
+                    printf("we placed the car at indice %d and incremented the frequency by one\n", j);                    
+                }             
+            }
+        }
+    }
+
+    return occ;
+}
 
 int main()
 {
     Occurency *occ;
+    //initialize
+    //printf("where is the problem?\n");
+    occ = init();
     occ = reading_file();
+    printf("compteur = %d", occ->counter);
 
     for(int i = 0; i < occ->counter; i++){
-        printf("%c", occ->text[i]);
+        printf("caracter : %c\n", occ->text[i]);
+        printf("frequency : %d\n", occ->occ_text[i]);
     }
 
 	return 0;
