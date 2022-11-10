@@ -151,13 +151,19 @@ Occurency *reading_file(Occurency *occ)
     FILE *fp;   
     fp = fopen("file.txt", "r");
     char tmp;
-    int i = 0;
 
     if(fp == NULL)
         printf("Error, we cannot open your file\n");
 
-    while((tmp = fgetc(fp)) != EOF){
-        verif(occ, tmp);
+    while((tmp = fgetc(fp)) != EOF){ 
+        if(tmp == ' '){ //skip the spaces 
+            continue;
+        }
+
+        else{
+            verif(occ, tmp);
+            printf("%c", tmp);
+        }
         //occ->text[i] = tmp;
         //printf("%c", occ->text[i]); //test
         //i++;
@@ -182,9 +188,9 @@ int main()
     occ = reading_file(occ);
 
     for(i = 0; i < occ->counter; i++){
-        printf("text[%d] = %c\n", i, occ->text[i]);
+        printf("\ntext[%d] = %c - ", i, occ->text[i]);
         printf("occ_text[%d] = %d\n", i, occ->occ_text[i]);
-    } 
+    }
 
 	return 0;
 }
