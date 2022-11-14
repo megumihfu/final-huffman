@@ -203,6 +203,24 @@ Noeud *huff(Noeud *Arbre)
     return Arbre;
 }
 
+void create_code1(Occurency *occ, Noeud *Arbre)
+{
+    FILE *f; 
+    f = fopen("compressed.txt", "w");
+
+    if(Arbre == NULL)
+        fprintf(f, "0%c ", Arbre->valeur);
+
+    else{
+        fprintf(f, "1 "); //idk if it's needed
+        create_code(occ, Arbre->branche_droite);
+        fprintf(f, "1");
+        cerate_code(occ, Arbre->branche_gauche);
+    }
+
+    fclose(f);
+}
+
 Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]) //assigner les val 1 et 0 sur les branches pour le code binaire d'huffman
 {
     int i = 0;
@@ -218,6 +236,8 @@ Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]) //assigner
         strncat(Temp, "1", 2);
         create_code2(tabs, Arbre->branche_gauche, Temp);
     }
+
+    Arbre = branch_value(tabs, Arbre, Temp);
     
     for(size_t i = 0; i < 130; i++)
     {
@@ -233,7 +253,7 @@ Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]) //assigner
    
     return tabs; 
 }
-///////////////////////////////////////////////////////////////////////:
+
 Occurency *init_occ(char filename[20])
 {
     Occurency *occ = malloc(sizeof(*occ));
