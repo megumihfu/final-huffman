@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 ////////////////////// STRUCT ////////////////////////
-
 typedef struct Cellule Cellule;
 struct Cellule{
     char valeur; 
@@ -53,7 +52,9 @@ void insererElement(ListeNoeud *liste, int freq, char val);
 void afficherListe(ListeNoeud *liste);
 void remplirChaine(ListeNoeud *Arbre, Occurency *occ);
 Noeud *concatener(Noeud *Arbre);
+void create_code1(Occurency *occ, Noeud *Arbre);
 Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]);
+
 
 Occurency *init_occ(char filename[20]);
 Occurency *verif(Occurency *occ, char car);
@@ -61,12 +62,3 @@ Occurency *reading_file(Occurency *occ, char filename[20]);
 Occurency *set_counter(Occurency *occ);
 int file_size(char filename[20]);
 void *compression(Occurency *occ, char filename[20]);
-
-
-
-/*
-Noeud *init(); 
-Noeud *reading_file(Noeud *noeud);
-Noeud *add_element(Noeud *noeud, int nouv);
-void display_list(Noeud *premier, Cellule *cel); 
-*/
