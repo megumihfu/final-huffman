@@ -20,8 +20,8 @@ void insererElement(ListeNoeud *liste, int freq, char val)
     element->frequence = freq;
     element->valeur = val;
 
-    element->branche_droite = NULL;
     element->branche_gauche = NULL;
+    element->branche_droite = NULL;
     element->accroche = liste->premier;
     liste->premier = element;
     liste->nbNoeud++;
@@ -180,8 +180,8 @@ Noeud *concatener(Noeud *Arbre)
     temp1 = Arbre->accroche;
     new = malloc(sizeof (Noeud));
 
-    new->branche_droite = temp;
-    new->branche_gauche = temp1;
+    new->branche_droite = temp; // NON INVERSEE 
+    new->branche_gauche = temp1; //NON INVERSEE 
     new->frequence = temp->frequence + temp1->frequence;
     new->accroche = temp1->accroche;
     new->valeur = '\0';
@@ -203,21 +203,41 @@ Noeud *huff(Noeud *Arbre)
     return Arbre;
 }
 
-void create_code1(Occurency *occ, Noeud *Arbre)
+void create_code1(Occurency *occ, Noeud *node)
 {
     FILE *f; 
     f = fopen("compressed.txt", "w");
 
-    if(Arbre == NULL)
-        fprintf(f, "0%c ", Arbre->valeur);
+    if(f == NULL)
+        printf("An error occured when trying to write in the file\n");
+
+    if(node->branche_gauche == NULL && node->branche_droite == NULL)
+        //fprintf(f, "0%c ", node->valeur);
+        //printf("0%c ", node->valeur); //test 
+        printf("feuille --> %c\n", node->valeur);
 
     else{
-        fprintf(f, "1 "); //idk if it's needed
-        create_code(occ, Arbre->branche_droite);
-        fprintf(f, "1");
-        cerate_code(occ, Arbre->branche_gauche);
+        //fprintf(f, "1 "); //idk if it's needed
+        //printf("1 ");
+        create_code1(occ, node->branche_gauche);
+        printf("0%c  ", node->branche_gauche->valeur);
+        create_code1(occ, node->branche_droite);
+        printf("1%c  ", node->branche_droite->valeur);
+        //printf("1%c ", node->valeur);
     }
-    fprintf(f, "\n");  //let the 3rd line for the binary compression
+    
+    /*if(node->branche_gauche != NULL) //branche droite -> valeur binaire 0
+    {
+        printf(" 0%c ", node->valeur);
+        create_code1(occ, node->branche_gauche);
+    }
+    
+    if(node->branche_droite != NULL) //branche gauche -> valeur binaire 1
+    {
+        printf(" 1%c ", node->valeur);
+        create_code1(occ, node->branche_droite);
+    }*/
+
     fclose(f);
 }
 
@@ -225,19 +245,17 @@ Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]) //assigner
 {
     int i = 0;
 
-    if(Arbre->branche_droite != NULL) //branche droite -> valeur binaire 0
+    if(Arbre->branche_gauche != NULL) //branche droite -> valeur binaire 0
     {
         strncat(Temp, "0", 2);
-        create_code2(tabs, Arbre->branche_droite, Temp);
-    }
-    
-    if(Arbre->branche_gauche != NULL) //branche gauche -> valeur binaire 1
-    {
-        strncat(Temp, "1", 2);
         create_code2(tabs, Arbre->branche_gauche, Temp);
     }
-
-    Arbre = branch_value(tabs, Arbre, Temp);
+    
+    if(Arbre->branche_droite != NULL) //branche gauche -> valeur binaire 1
+    {
+        strncat(Temp, "1", 2);
+        create_code2(tabs, Arbre->branche_droite, Temp);
+    }
     
     for(size_t i = 0; i < 130; i++)
     {
