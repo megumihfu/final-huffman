@@ -217,7 +217,7 @@ void create_code1(Occurency *occ, Noeud *Arbre)
         fprintf(f, "1");
         cerate_code(occ, Arbre->branche_gauche);
     }
-
+    fprintf(f, "\n");  //let the 3rd line for the binary compression
     fclose(f);
 }
 
