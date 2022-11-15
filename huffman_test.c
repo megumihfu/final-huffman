@@ -206,55 +206,30 @@ Noeud *huff(Noeud *Arbre)
 void create_code1(Occurency *occ, Noeud *node)
 {
     Noeud *Arbre;
+    char *tmp;
     FILE *f; 
     f = fopen("compressed.txt", "w");
 
-    /*if(f == NULL)
-        printf("An error occured when trying to write in the file\n");
-
-    if(node->branche_gauche == NULL && node->branche_droite == NULL)
-        //fprintf(f, "0%c ", node->valeur);
-        //printf("0%c ", node->valeur); //test 
-        printf("feuille --> %c\n", node->valeur);
-
-    else{
-        //fprintf(f, "1 "); //idk if it's needed
-        //printf("1 ");
-        create_code1(occ, node->branche_gauche);
-        printf("0%c  ", node->branche_gauche->valeur);
-        create_code1(occ, node->branche_droite);
-        printf("1%c  ", node->branche_droite->valeur);
-        //printf("1%c ", node->valeur);
-    }
-    
-    if(node->branche_gauche != NULL) //branche droite -> valeur binaire 0
-    {
-        printf(" 0%c ", node->valeur);
-        create_code1(occ, node->branche_gauche);
-    }
-    
-    if(node->branche_droite != NULL) //branche gauche -> valeur binaire 1
-    {
-        printf(" 1%c ", node->valeur);
-        create_code1(occ, node->branche_droite);
-    }*/
+    fprintf(f, "\n1"); //because first node is always 1 in the tree
 
     if(node == NULL) //if the tree doesnt exist, just exit the function
         return;
 
-    if(node == Arbre->premier) //if the first node is the head of the tree
-        printf("1 ");
-
-    if(node->branche_gauche == NULL && node->branche_gauche == NULL) //if the current node is the leaf
+    if(node->branche_gauche == NULL && node->branche_gauche == NULL){ //if the current node is the leaf
+        tmp = node->valeur;
+        fprintf(f, "%c ", node->valeur);
         printf("%c ", node->valeur);
+    }
 
     if(node->branche_gauche != NULL){ //if it's the left branch, assign 0
-        printf("0");
+        fprintf(f, " 0");
+        printf(" 0");
         create_code1(occ, node->branche_gauche);
     }
 
     if(node->branche_droite != NULL){ //if it's the right branch, assign 1
-        printf("1");
+        fprintf(f, " 1");
+        printf(" 1");
         create_code1(occ, node->branche_droite);
     }
 
@@ -399,7 +374,7 @@ void *compression(Occurency *occ, char filename[20])
     if(fp == NULL || f == NULL)
         printf("Error, we cannot open your file\n");
 
-    size = file_size(filename);
+    size = file_size(filename); //first line 
     fprintf(f, "%d\n", size);
 
     while((tmp = fgetc(fp)) != EOF){ 
