@@ -205,10 +205,11 @@ Noeud *huff(Noeud *Arbre)
 
 void create_code1(Occurency *occ, Noeud *node)
 {
+    Noeud *Arbre;
     FILE *f; 
     f = fopen("compressed.txt", "w");
 
-    if(f == NULL)
+    /*if(f == NULL)
         printf("An error occured when trying to write in the file\n");
 
     if(node->branche_gauche == NULL && node->branche_droite == NULL)
@@ -226,7 +227,7 @@ void create_code1(Occurency *occ, Noeud *node)
         //printf("1%c ", node->valeur);
     }
     
-    /*if(node->branche_gauche != NULL) //branche droite -> valeur binaire 0
+    if(node->branche_gauche != NULL) //branche droite -> valeur binaire 0
     {
         printf(" 0%c ", node->valeur);
         create_code1(occ, node->branche_gauche);
@@ -237,6 +238,25 @@ void create_code1(Occurency *occ, Noeud *node)
         printf(" 1%c ", node->valeur);
         create_code1(occ, node->branche_droite);
     }*/
+
+    if(node == NULL)
+        return;
+
+    if(node == Arbre->premier)
+        printf("1 ");
+
+    if(node->branche_gauche == NULL && node->branche_gauche == NULL) 
+        printf("%c ", node->valeur);
+
+    if(node->branche_gauche != NULL){
+        printf("0");
+        create_code1(occ, node->branche_gauche);
+    }
+
+    if(node->branche_droite != NULL){
+        printf("1");
+        create_code1(occ, node->branche_droite);
+    }
 
     fclose(f);
 }
