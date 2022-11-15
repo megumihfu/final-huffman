@@ -239,21 +239,21 @@ void create_code1(Occurency *occ, Noeud *node)
         create_code1(occ, node->branche_droite);
     }*/
 
-    if(node == NULL)
+    if(node == NULL) //if the tree doesnt exist, just exit the function
         return;
 
-    if(node == Arbre->premier)
+    if(node == Arbre->premier) //if the first node is the head of the tree
         printf("1 ");
 
-    if(node->branche_gauche == NULL && node->branche_gauche == NULL) 
+    if(node->branche_gauche == NULL && node->branche_gauche == NULL) //if the current node is the leaf
         printf("%c ", node->valeur);
 
-    if(node->branche_gauche != NULL){
+    if(node->branche_gauche != NULL){ //if it's the left branch, assign 0
         printf("0");
         create_code1(occ, node->branche_gauche);
     }
 
-    if(node->branche_droite != NULL){
+    if(node->branche_droite != NULL){ //if it's the right branch, assign 1
         printf("1");
         create_code1(occ, node->branche_droite);
     }
