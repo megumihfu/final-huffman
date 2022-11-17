@@ -1,4 +1,4 @@
-/* #include "huffman.h"
+#include "huffman.h"
 
 ListeCellule *initListeCel() //retourne la tete initialisée
 {
@@ -57,48 +57,7 @@ void remplirChaine(ListeNoeud *Arbre, Occurency *occ)
     
     
 }
-/*
-Noeud *trier(Noeud *element)
-{// ici on va ranger les elemants dans l'ordre croisssant avant de les afficher...
- 
-   Noeud *temp, *temp1, *temp2;
-   int min, a; 
-   //temp2=(Noeud)malloc(sizeof(Noeud));
-   //temp1=(Noeud)malloc(sizeof(Noeud));
-   temp=element;
-   
- 
-   while(temp!=NULL)
-   {  
-        
-        min=temp->frequence;
-        temp1=temp->accroche;           
- 
-        while(temp1!=NULL)
-        {           
-            
-            if(min > temp1->frequence)
-            {  
-                temp2=temp1;      // le 3è tempraire me permet de savoir l'adresse de l'élement ou j'ai reperé le minimum pour faciliter l'échange
-                min=temp2->frequence;
-            }                
-            temp1=temp1->accroche; 
-        } //a ce niveau je sors de la 2iem boucle
-        
-        a=temp->frequence; //echange des 2 elements...
-        
-        temp->frequence=min;
-        printf("ok\n");
-        temp2->frequence=a;  
-        printf("ok\n");     
-        
-        temp=temp->accroche;  
-                              
-    }          
- 
-    return element;
-}
-*/
+
 // Tri de la liste par ordre croissant du champ nombre
 Noeud* triElements(Noeud* liste)
 {
@@ -203,17 +162,15 @@ Noeud *huff(Noeud *Arbre)
     return Arbre;
 }
 
-char create_code1(Occurency *occ, Noeud *node, char *tmp, int i)
-{
-    Noeud *Arbre;
-    /*FILE *f; 
-    f = fopen("compressed.txt", "w"); */
-
+Occurency *create_code1(Occurency *occ, Noeud *node, char *tmp, int i)
+{    
+    int i = 0;
+    
     if(node == NULL) //if the tree doesnt exist, just exit the function
         return;
 
     if(node->branche_gauche == NULL && node->branche_gauche == NULL){ //if the current node is the leaf
-        tmp[i] = node->valeur;
+        occ->code[i] = node->valeur;
         i++;
         printf("%c ", node->valeur);
     }
@@ -228,10 +185,8 @@ char create_code1(Occurency *occ, Noeud *node, char *tmp, int i)
         tmp[i] = "1"; //printf(" 1");
         create_code1(occ, node->branche_droite);
     }
-
-    //fclose(f);
-
-    return tmp;
+    
+    return occ;
 }
 
 Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]) //assigner les val 1 et 0 sur les branches pour le code binaire d'huffman
@@ -286,6 +241,7 @@ Occurency *init_occ(char filename[20])
 
     return occ;
 }
+
 Occurency *verif(Occurency *occ, char car)
 {
     int i, freq = 1;
@@ -323,11 +279,7 @@ Occurency *reading_file(Occurency *occ, char filename[20])
     if(fp == NULL)
         printf("Error, we cannot open your file\n");
 
-    while((tmp = fgetc(fp)) != EOF){ 
-        /*if(tmp == ' '){ //skip the spaces 
-            continue;
-        }*/
-    
+    while((tmp = fgetc(fp)) != EOF){    
         verif(occ, tmp);
         //printf("%c", tmp); //test 
     }
@@ -364,7 +316,6 @@ void *compression(Occurency *occ, char filename[20])
     char tmp1;
     char *tmp;
     int size;
-    int size;
     FILE *fp;  
     FILE *f; 
 
@@ -377,11 +328,13 @@ void *compression(Occurency *occ, char filename[20])
     size = file_size(filename); //first line 
     fprintf(f, "%d\n", size);
 
-    tmp = malloc(tmp*sizeof(size));
+    //tmp = malloc(tmp*sizeof(size));
+    for(int i = 0; i < 130; i++){
+        fprint(f, "%s", occ->code1[i]);
+        //printf("%s - ", occ->code[i]); //if we need to test our values 
+    }
     
-
-
-    while((tmp1 = fgetc(fp)) != EOF){ 
+    while((tmp1 = fgetc(fp)) != EOF){  //third line 
         for(int i = 0; i < occ->counter; i++){
             if(tmp1 == occ->text[i]){
                 fprintf(f, "%s ", occ->code[i]);
@@ -392,7 +345,9 @@ void *compression(Occurency *occ, char filename[20])
     free(tmp);
     fclose(fp);
     fclose(f);
-}*/
+}
+
+/*//////////////////////////////////////////////////////////////////////// OLD PROGRAMM !! ///////////////////////////////////////////////////////////////////////*/
 #include "huffman.h"
 
 ListeCellule *initListeCel() //retourne la tete initialisée
