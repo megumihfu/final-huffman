@@ -3,62 +3,71 @@
 #include <string.h> 
 #include <stdbool.h>
 
+#define SIZE 130
+
 ////////////////////// STRUCT ////////////////////////
-typedef struct Cellule Cellule;
-struct Cellule{
+typedef struct Cellule{
     char valeur; 
     int frequence; 
-    Cellule *suivant;
-};
+    struct Cellule *suivant;
+}Cellule;
 
-typedef struct ListeCellule ListeCellule;  //on declare une liste, qui est enfaite une structure qui sauvegarde 
-struct ListeCellule {                     //le nombre d'avion dans la liste et qui pointe sur le premier element de la liste
+typedef struct ListeCellule {                   
     int nbCellule;
-    Cellule *premier;
-};
+    struct Cellule *premier;
+}ListeCellule;
 
-typedef struct Noeud Noeud;
-struct Noeud{ //notre liste 
-    Noeud *branche_droite;
-    Noeud *branche_gauche;
-    Noeud *accroche;
+typedef struct Noeud{ //notre liste 
+    struct Noeud *branche_droite;
+    struct Noeud *branche_gauche;
+    struct Noeud *accroche;
     char valeur; 
     int frequence;
-};
+}Noeud;
 
-typedef struct ListeNoeud ListeNoeud;  //on declare une liste, qui est enfaite une structure qui sauvegarde 
-struct ListeNoeud {                     //le nombre d'avion dans la liste et qui pointe sur le premier element de la liste
+typedef struct ListeNoeud{                    
     int nbNoeud;
-    Noeud *premier;
-};
+    struct Noeud *premier;
+}ListeNoeud;
 
-typedef struct Occurency{
-    char text[130];
-    int occ_text[130];
+typedef struct Dictionnary{
+    char text[SIZE];
+    int occ_text[SIZE];
+    //char code1[SIZE];
+    char code[SIZE][20];
+    char dec[SIZE];
     int counter;
-    char code[130][20];
-}Occurency;
+}Dictionnary;
 
 ////////////////////// FUNCTIONS //////////////////////
 ListeCellule *initListeCel();
 ListeNoeud *initListeNoe();
-//char **reading_file(char *nom_fichier);
-//ListeNoeud *remplirChaine(Occurency *occ);
-//Noeud *trieArbre(Noeud *Arbre);
-//Noeud *trier(Noeud *element);
+
 Noeud *huff(Noeud *Arbre);
 Noeud* triElements(Noeud* liste);
 void insererElement(ListeNoeud *liste, int freq, char val);
 void afficherListe(ListeNoeud *liste);
-void remplirChaine(ListeNoeud *Arbre, Occurency *occ);
+void remplirChaine(ListeNoeud *Arbre, Dictionnary *dico);
 Noeud *concatener(Noeud *Arbre);
-void create_code1(Occurency *occ, Noeud *Arbre);
-Occurency *create_code2(Occurency *tabs, Noeud *Arbre, char Temp[20]);
+//char *create_code1(Dictionnary *dico, Noeud *Arbre);
+//void create_code1(Dictionnary *dico, Noeud *node);
+//char *create_code1(Dictionnary *dico, Noeud *node, char code1[SIZE]);
+//Dictionnary *create_code1(Dictionnary *dico, Noeud *node);
+void create_code1(Dictionnary *dico, Noeud *node, FILE *f);
+Dictionnary *create_code2(Dictionnary *tabs, Noeud *Arbre, char Temp[20]);
+char* creerAbrDec(Noeud *actuel,  char* code1);
+//Dictionnary *creerAbrDec(Noeud *actuel);//,  char* code1) // recrer l'arbre binaire a partir de l'entete dans le fichier compressé
+void creerFils(Noeud *parent);
 
+Dictionnary *init_dico();
+Dictionnary *verif(Dictionnary *dico, char car);
+Dictionnary *reading_file(Dictionnary *dico, FILE *fp);
+//Dictionnary *set_counter(Dictionnary *dico, char tmp[]);
+Dictionnary *set_counter(Dictionnary *dico);
+//int set_counter(char tmp[]);
+int file_size(FILE *fp);
+void compression(Dictionnary *dico, char filename[20], FILE* fp, FILE *f);
+Dictionnary *data_from_file(Dictionnary *dico, FILE *f);
 
-Occurency *init_occ(char filename[20]);
-Occurency *verif(Occurency *occ, char car);
-Occurency *reading_file(Occurency *occ, char filename[20]);
-Occurency *set_counter(Occurency *occ);
-int file_size(char filename[20]);
-void *compression(Occurency *occ, char filename[20]);
+int menu();
+void display_file(FILE *tmp);
