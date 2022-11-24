@@ -43,11 +43,15 @@ void creerFils(Noeud *parent);
 
 Occurency *init();
 Occurency *verif(Occurency *occ, char car);
-Occurency *reading_file(Occurency *occ);
+Occurency *reading_file(Occurency *occ, FILE *fp);
 Occurency *size(Occurency *occ);
-void compression(Occurency *occ);// char filename[20], FILE* fp, FILE *f)
-void create_code1(Occurency *occ, Noeud *node);//, FILE *f);
+//void compression(Occurency *occ);// char filename[20], FILE* fp, FILE *f)
+void compression(Occurency *dico, char filename[20], FILE* fp, FILE *f);
+//void create_code1(Occurency *occ, Noeud *node);//, FILE *f);
+void create_code1(Occurency *dico, Noeud *node, FILE *f);
 Occurency *data_from_file(Occurency *occ, FILE *f);
+int menu();
+void display_file(FILE *tmp);
 /*
 Noeud *init(); 
 Noeud *reading_file(Noeud *noeud);
