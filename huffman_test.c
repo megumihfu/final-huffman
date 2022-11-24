@@ -160,21 +160,21 @@ Noeud *huff(Noeud *Arbre)
     return Arbre;
 }
 
-void create_code1(Occurency *occ, Noeud *node)//, FILE *f)
+void create_code1(Occurency *occ, Noeud *node, FILE *f)
 {
     if(node == NULL) //if the tree doesnt exist, just exit the function
         return;
 
     if(node->branche_gauche == NULL && node->branche_droite == NULL){ //if the current node is the leaf
-        //fprintf(f, "0%c", node->valeur);
+        fprintf(f, "0%c", node->valeur);
         printf("0%c", node->valeur);
     }
 
     if(node->branche_droite != NULL || node->branche_gauche != NULL){ //if it's the left branch, assign 0
-        //fprintf(f, "1");
+        fprintf(f, "1");
         printf("1");
-        create_code1(occ, node->branche_droite);
-        create_code1(occ, node->branche_gauche);
+        create_code1(occ, node->branche_droite, f);
+        create_code1(occ, node->branche_gauche, f);
     }
 }
 
@@ -265,22 +265,16 @@ Occurency *verif(Occurency *occ, char car)
 
     return occ;
 }
-Occurency *reading_file(Occurency *occ)
+Occurency *reading_file(Occurency *occ, FILE *fp)
 {   
-    FILE *fp;   
-    fp = fopen("file.txt", "r");
+    //FILE *fp;   
+    //fp = fopen("file.txt", "r");
     char tmp;
 
-    if(fp == NULL)
-        printf("Error, we cannot open your file\n");
-
     while((tmp = fgetc(fp)) != EOF){ 
-       
         verif(occ, tmp);
         printf("%c", tmp); //test 
     }
-
-    fclose(fp);
 
     return occ;
 }
@@ -294,12 +288,12 @@ Occurency *size(Occurency *occ) //pour pas avoir le reste du tableau pas rempli 
     return occ;
 }
 
-void compression(Occurency *dico)// char filename[20], FILE* fp, FILE *f)
+void compression(Occurency *dico, char filename[20], FILE* fp, FILE *f)
 {
     char tmp;
-    FILE *fp;
+    //FILE *fp;
 
-    fp = fopen("file.txt", "r");
+    //fp = fopen(filename, "r");
 
     while((tmp = fgetc(fp)) != EOF){ 
         for(int i = 0; i < dico->counter; i++){
@@ -310,8 +304,6 @@ void compression(Occurency *dico)// char filename[20], FILE* fp, FILE *f)
             }
         }
     }
-
-   fclose(fp);
 }
 
 
@@ -366,23 +358,46 @@ void creerFils(Noeud *parent)
     parent->branche_gauche = gauche;
 }
 
-char* creerAbrDec(Noeud *actuel,  char* bleu) // recrer l'arbre binaire a partir de l'entete dans le fichier compressé
+char* creerAbrDec(Noeud *actuel,  char* code1) // recrer l'arbre binaire a partir de l'entete dans le fichier compressé
 {
-        // 'bleu' est la chaine de caractere qui comporte l'entete (c'est l'arbre encodé)
-    if(*bleu == '1') //donc l'arbre a des fils
+        // 'code1' est la chaine de caractere qui comporte l'entete (c'est l'arbre encodé)
+    if(*code1 == '1') //donc l'arbre a des fils
     {
         creerFils(actuel);
-        bleu = creerAbrDec(actuel->branche_droite, bleu + 1);
-        bleu = creerAbrDec(actuel->branche_gauche, bleu + 1);
+        code1 = creerAbrDec(actuel->branche_droite, code1 + 1);
+        code1 = creerAbrDec(actuel->branche_gauche, code1 + 1);
     }
-    else if(*bleu == '0')
+    else if(*code1 == '0')
     {
-        bleu = bleu + 1;
-        actuel->valeur = *bleu;
+        code1 = code1 + 1;
+        actuel->valeur = *code1;
         
     }
     
-    return bleu;
+    return code1;
 }
 
-//creer une fonction qui reprend l'entente (bleu) et rempli un *char avec toutes les val != 0 ou 1
+int menu()
+{
+    int choix1;
+
+    system("clear");
+    printf("\n                        MENU                        \n");
+    printf("HUFFMAN : compression/décompression -------------- 1\n");
+    printf("Affichage du fichier ----------------------------- 2\n");
+    printf("Quitter le programme ----------------------------- 3\n\n");
+    printf("Veuillez entrer la valeur de votre choix :\n");
+    scanf("%d", &choix1);
+
+    return choix1;
+}
+
+void display_file(FILE *tmp)
+{   
+    char car;
+    while((car = fgetc(tmp)) != EOF){ 
+        printf("%c", car);
+    }
+    printf("\n");
+    fclose(tmp);
+}
