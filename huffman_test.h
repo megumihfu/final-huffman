@@ -24,6 +24,7 @@ typedef struct Occurency{
     int occ_text[130];
     int counter;
     char code[130][20];
+    char *dec;
 }Occurency;
 
 ////////////////////// FUNCTIONS //////////////////////
@@ -46,6 +47,7 @@ Occurency *reading_file(Occurency *occ);
 Occurency *size(Occurency *occ);
 void compression(Occurency *occ);// char filename[20], FILE* fp, FILE *f)
 void create_code1(Occurency *occ, Noeud *node);//, FILE *f);
+Occurency *data_from_file(Occurency *occ, FILE *f);
 /*
 Noeud *init(); 
 Noeud *reading_file(Noeud *noeud);
