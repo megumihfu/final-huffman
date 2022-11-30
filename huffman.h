@@ -6,68 +6,55 @@
 #define SIZE 130
 
 ////////////////////// STRUCT ////////////////////////
-typedef struct Cellule{
-    char valeur; 
-    int frequence; 
-    struct Cellule *suivant;
-}Cellule;
-
-typedef struct ListeCellule {                   
-    int nbCellule;
-    struct Cellule *premier;
-}ListeCellule;
-
-typedef struct Noeud{ //notre liste 
-    struct Noeud *branche_droite;
-    struct Noeud *branche_gauche;
-    struct Noeud *accroche;
+typedef struct Noeud Noeud;
+struct Noeud{ //notre liste 
+    Noeud *branche_droite;
+    Noeud *branche_gauche;
+    Noeud *accroche;
     char valeur; 
     int frequence;
-}Noeud;
+};
 
-typedef struct ListeNoeud{                    
+typedef struct ListeNoeud ListeNoeud;  //on declare une liste, qui est enfaite une structure qui sauvegarde 
+struct ListeNoeud {                     //le nombre d'avion dans la liste et qui pointe sur le premier element de la liste
     int nbNoeud;
-    struct Noeud *premier;
-}ListeNoeud;
+    Noeud *premier;
+};
 
 typedef struct Dictionnary{
-    char text[SIZE];
-    int occ_text[SIZE];
-    //char code1[SIZE];
-    char code[SIZE][20];
-    char dec[SIZE];
-    int counter;
+    char text[SIZE]; //all the caracter existing in the text file
+    int occ_text[SIZE]; //nbr of occ for all the caracters
+    //int counter_l1;
+    int counter;//_l2; 
+    char code[SIZE][20]; //pseudo binary code for each caracter
+    short int dec_code[SIZE]; //decimal version of array 'code'
+    char *dec; //array of code1 for creating the tree
 }Dictionnary;
 
 ////////////////////// FUNCTIONS //////////////////////
-ListeCellule *initListeCel();
+
 ListeNoeud *initListeNoe();
 
 Noeud *huff(Noeud *Arbre);
 Noeud* triElements(Noeud* liste);
 void insererElement(ListeNoeud *liste, int freq, char val);
-void afficherListe(ListeNoeud *liste);
-void remplirChaine(ListeNoeud *Arbre, Dictionnary *dico);
+//void afficherListe(ListeNoeud *liste);
+void remplirChaine(ListeNoeud *Arbre, Dictionnary *occ);
 Noeud *concatener(Noeud *Arbre);
-//char *create_code1(Dictionnary *dico, Noeud *Arbre);
-//void create_code1(Dictionnary *dico, Noeud *node);
-//char *create_code1(Dictionnary *dico, Noeud *node, char code1[SIZE]);
-//Dictionnary *create_code1(Dictionnary *dico, Noeud *node);
-void create_code1(Dictionnary *dico, Noeud *node, FILE *f);
 Dictionnary *create_code2(Dictionnary *tabs, Noeud *Arbre, char Temp[20]);
-char* creerAbrDec(Noeud *actuel,  char* code1);
-//Dictionnary *creerAbrDec(Noeud *actuel);//,  char* code1) // recrer l'arbre binaire a partir de l'entete dans le fichier compressé
+char* creerAbrDec(Noeud *oky,  char* bleu);
 void creerFils(Noeud *parent);
 
-Dictionnary *init_dico();
-Dictionnary *verif(Dictionnary *dico, char car);
-Dictionnary *reading_file(Dictionnary *dico, FILE *fp);
-//Dictionnary *set_counter(Dictionnary *dico, char tmp[]);
-Dictionnary *set_counter(Dictionnary *dico);
-//int set_counter(char tmp[]);
-int file_size(FILE *fp);
-void compression(Dictionnary *dico, char filename[20], FILE* fp, FILE *f);
-Dictionnary *data_from_file(Dictionnary *dico, FILE *f);
-
+Dictionnary *init_occ();
+Dictionnary *verif(Dictionnary *occ, char car);
+Dictionnary *reading_file(Dictionnary *occ, FILE *fp);
+Dictionnary *size(Dictionnary *occ);
+void pseudo_compression(Dictionnary *dico, FILE *fp, char filename[20], FILE *ft);
+//void create_code1(Dictionnary *occ, Noeud *node);//, FILE *f);
+void create_code1(Dictionnary *dico, Noeud *node, FILE *f);
+Dictionnary *data_from_file(Dictionnary *occ, FILE *f);
 int menu();
 void display_file(FILE *tmp);
+void decompression(Dictionnary *dico, char *code1, FILE *ft);
+int cursor_l1(char c, FILE *ft);
+//void pseudo_bin_to_dec(Dictionnary *dico, FILE *b);
